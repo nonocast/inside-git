@@ -2,9 +2,7 @@ _ = require 'lodash'
 fs = require 'fs'
 strftime = require 'strftime'
 sprintf = require("sprintf-js").sprintf
-chalk = require 'chalk'
 pack = require './coffee-pack'
-style = sha1: chalk.green, stage: chalk.red
 
 class Index
   constructor: (@index) ->
@@ -23,7 +21,6 @@ class Entry
       strftime('%Y-%m-%d %H:%M:%S', new Date(ctime_s*10**3)) + sprintf('.%09d', ctime_ns),
       strftime('%Y-%m-%d %H:%M:%S', new Date(mtime_s*10**3)) + sprintf('.%09d', mtime_ns)]
 
-  toString: -> "#{style.stage @stage} #{style.sha1 @sha1.toShortSha1()} #{@name}"
 
 class Blob
 

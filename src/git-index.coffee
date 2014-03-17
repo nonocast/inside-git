@@ -1,4 +1,9 @@
+path = require 'path'
+fs = require 'fs'
+chalk = require 'chalk'
 Git = require './git-core'
+pack = require './coffee-pack'
+style = sha1: chalk.green, stage: chalk.red
 
 class App
   run: ->
@@ -7,7 +12,8 @@ class App
 
   parse: ->
     index = new Git.Index @root
-    console.log entry.toString() for each in index.entries
+    for each in index.entries
+      console.log "#{style.stage each.stage} #{style.sha1 each.sha1.toShortSha1()} #{each.name}"
 
   get_root: ->
     current = '.'
@@ -22,3 +28,7 @@ class App
       @root = path.join @root, '.git/index'
     else
       throw new Error 'not found .git/index'
+
+module.exports = exports = App
+
+new App().run() if require.main is module
