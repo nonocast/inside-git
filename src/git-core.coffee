@@ -1,8 +1,10 @@
 _ = require 'lodash'
 fs = require 'fs'
+path = require 'path'
+zlib = require 'zlib'
 strftime = require 'strftime'
 sprintf = require("sprintf-js").sprintf
-pack = require './coffee-pack'
+pack = require './pack/coffee-pack'
 
 class Index
   constructor: (@index) ->
@@ -21,7 +23,6 @@ class Entry
       strftime('%Y-%m-%d %H:%M:%S', new Date(ctime_s*10**3)) + sprintf('.%09d', ctime_ns),
       strftime('%Y-%m-%d %H:%M:%S', new Date(mtime_s*10**3)) + sprintf('.%09d', mtime_ns)]
 
-
 class Blob
 
 class Tree
@@ -32,4 +33,25 @@ class Tag
 
 class Branch
 
+class Builder
+  @Types = blob: Blob, tree: Tree, tag: Tag, commit: Commit
+  constructor: (@file) ->
+  build: (done) ->
+    obj = {}
+    [obj.file, obj.sha1, obj.stat, obj.dir, obj.name] =
+      [@file, new Buffer(path.basename(@file), 'hex'), fs.statSync(@file), @file.split(path.sep)[-2..]...]
+
+    (source = fs.createReadStream(@file)).pipe(zlib.createInflate()).on 'readable', ->
+      return if obj.type? # return表示跳过这次readable，不应该调用done err
+      source.unpipe()
+      chunk = new pack.BufferStack @read()
+      [obj.type, obj.size] = chunk.pop('string').split ' '
+      obj.size = parseInt obj.size
+      obj.sample = chunk.pop '55 byte' # 55 - 只为一行显示，没有特殊含义
+
+      result = new Builder.Types[obj.type]()
+      result[k] = v for k, v of obj
+      done null, result
+
 exports.Index = Index
+exports.Builder = Builder

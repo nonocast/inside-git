@@ -3,7 +3,7 @@ fs = require 'fs'
 chalk = require 'chalk'
 program = require 'commander'
 Git = require './git-core'
-pack = require './coffee-pack'
+pack = require './pack/coffee-pack'
 style = sha1: chalk.green, stage: chalk.red
 
 module.exports = exports = \

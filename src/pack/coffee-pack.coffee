@@ -1,10 +1,14 @@
 _ = require 'lodash'
+
 Function::property = (prop, descriptor) -> Object.defineProperty @::, prop, descriptor
 Function::extend = (obj) -> @[k] = v for k,v of obj
 Function::include = (obj) -> @::[k] = v for k,v of obj
 
-Buffer.prototype.toHexString = -> '< ' + this.toString('hex').replace(/.{2}/g, (match) -> match + ' ') + '>'
-Buffer.prototype.toShortSha1 = -> this.toString('hex')[0...6]
+Buffer::toHexString = -> '< ' + this.toString('hex').replace(/.{2}/g, (match) -> match + ' ') + '>'
+Buffer::toShortSha1 = -> this.toString('hex')[0...6]
+Buffer::toSampleString = ->
+    if @isText() then @toString().trim().replace(/\n/g, '\\') \
+    else '< ' + @toString('hex')[0...20].replace(/.{2}/g, (match) -> match + ' ') + if @length > 6 then '... >' else '>'
 
 ###
 http://blog.csdn.net/cherylnatsu/article/details/6412898
