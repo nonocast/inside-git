@@ -1,0 +1,33 @@
+{
+  "name": "inside-git",
+  "version": "0.0.1",
+  "description": "inside git",
+  "main": "app.coffee",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/nonocast/inside-git"
+  },
+  "keywords": [
+    "git",
+    "coffeescript"
+  ],
+  "author": "nonocast",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/nonocast/inside-git/issues"
+  },
+  "homepage": "https://github.com/nonocast/inside-git",
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "strftime": "~0.8.0",
+    "sprintf-js": "0.0.7",
+    "chalk": "~0.4.0"
+  }
+}
