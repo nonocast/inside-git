@@ -1,0 +1,4 @@
+#! /usr/bin/env coffee
+
+App = require '../src/git-index'
+new App().run()
