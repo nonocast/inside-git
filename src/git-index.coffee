@@ -1,12 +1,15 @@
 path = require 'path'
 fs = require 'fs'
 chalk = require 'chalk'
+program = require 'commander'
 Git = require './git-core'
 pack = require './coffee-pack'
 style = sha1: chalk.green, stage: chalk.red
 
+module.exports = exports = \
 class App
   run: ->
+    @opts()
     @get_root()
     @parse()
 
@@ -29,6 +32,8 @@ class App
     else
       throw new Error 'not found .git/index'
 
-module.exports = exports = App
+  opts: ->
+    program.version('0.0.1').parse(process.argv)
+
 
 new App().run() if require.main is module
