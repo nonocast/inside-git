@@ -64,7 +64,7 @@ exports.BufferStack = class BufferStack
     return p
 
   parse_char: (count) -> @parse_byte(count).toString()
-  parse_string: -> @parse_byte(1+_.findIndex @buffer, (x) -> x is 0x00).toString()
+  parse_string: -> @parse_byte(1+_.findIndex @buffer, (x) -> x is 0x00)[0...-1].toString()
   parse_int32: -> @parse_byte(4).readInt32BE()
   parse_uint32: -> @parse_byte(4).readUInt32BE()
   parse_uint16: -> @parse_byte(2).readUInt16BE()
