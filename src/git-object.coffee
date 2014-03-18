@@ -11,7 +11,8 @@ Git = require './git-core'
 pack = require './pack/coffee-pack'
 style = sha1: chalk.green, stage: chalk.red, span: chalk.gray
 
-class App
+module.exports = exports = \
+class GitObjectApp
   run: ->
     @opts()
     @get_root()
@@ -66,6 +67,5 @@ class App
       .option('-p, --inspect <short sha1>', 'inspect object')
       .parse(process.argv)
 
-module.exports = exports = App
 
-new App().run() if require.main is module
+new GitObjectApp().run() if require.main is module

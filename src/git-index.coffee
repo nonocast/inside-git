@@ -7,7 +7,7 @@ pack = require './pack/coffee-pack'
 style = sha1: chalk.green, stage: chalk.red
 
 module.exports = exports = \
-class App
+class GitIndexApp
   run: ->
     @opts()
     @get_root()
@@ -36,4 +36,4 @@ class App
   opts: -> program.version('0.0.1').parse(process.argv)
 
 
-new App().run() if require.main is module
+new GitIndexApp().run() if require.main is module
