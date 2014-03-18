@@ -6,7 +6,6 @@ filesize = require 'filesize'
 path = require 'path'
 chalk = require 'chalk'
 program = require 'commander'
-exec = require('child_process').exec
 sprintf = require('sprintf-js').sprintf
 Git = require './git-core'
 pack = require './pack/coffee-pack'
@@ -19,23 +18,34 @@ class App
     @parse()
 
   parse: ->
-    if program.inspect? then @inspect(program.inspect) else @inspect_all()
+    Git.config @root, =>
+      if program.inspect? then @inspect(program.inspect) else @inspect_all()
 
   inspect: (sha1) ->
+    new Git.Builder(sha1).build (err, result) =>
+      result.load (err, result) =>
+        @['inspect_'+result.type](result)
+
+  inspect_tree: (result) ->
+    p = _.map result.items, (p) -> "#{sprintf '%06s', p.mode} #{sprintf '%4s', p.type} \
+      #{chalk.green p.sha1.toShortSha1()} #{p.name}"
+    console.log p.join '\n'
+
+  inspect_blob: (result) ->
+    console.log if result.body.isText() then result.body.toString().trim() else result.body.toHexString()
+
+  inspect_commit: (result) ->
+    console.log result.body
 
   inspect_all: ->
-    exec "find #{@root} -type f", (err, stdout, stderr) =>
-      files = stdout.trim().split('\n')
-      files = _.filter files, (p) -> path.basename(p).length is 38
-
-      async.map files, (each, done) ->
-        new Git.Builder(each).build(done)
-      , (err, results) =>
-        throw err if err?
-        results = _.sortBy results, (x) -> x.stat.ctime
-        for each in results
-          console.log "#{style.sha1 each.sha1.toShortSha1()} #{sprintf '%-6s', each.type} \
-            #{style.span sprintf '%7s', filesize each.size, spacer:''}  #{style.span each.sample.toSampleString()}"
+    async.map Git.context.objects, (each, done) ->
+      new Git.Builder(each.sha1).build(done)
+    , (err, results) =>
+      throw err if err?
+      results = _.sortBy results, (x) -> x.stat.ctime
+      for each in results
+        console.log "#{style.sha1 each.sha1.toShortSha1()} #{sprintf '%-6s', each.type} \
+          #{style.span sprintf '%7s', filesize each.size, spacer:''}  #{style.span each.sample.toSampleString()}"
 
   get_root: ->
     current = '.'
@@ -47,7 +57,7 @@ class App
         break
 
     if @root?
-      @root = path.join @root, '.git/objects'
+      @root = path.join @root, '.git/'
     else
       throw new Error 'not found .git/'
 

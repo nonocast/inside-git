@@ -33,8 +33,7 @@ class App
     else
       throw new Error 'not found .git/index'
 
-  opts: ->
-    program.version('0.0.1').parse(process.argv)
+  opts: -> program.version('0.0.1').parse(process.argv)
 
 
 new App().run() if require.main is module
