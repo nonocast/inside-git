@@ -22,10 +22,11 @@ class App
     current = '.'
     while true
       break if current is path.resolve current, '..'
-      current = path.resolve current, '..'
       if fs.existsSync path.join current, '.git/index'
         @root = current
         break
+
+      current = path.resolve current, '..'
 
     if @root?
       @root = path.join @root, '.git/index'
