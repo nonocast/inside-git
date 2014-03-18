@@ -1,4 +1,5 @@
 #! /usr/bin/env coffee
 
-App = require '../src/git-object'
+path = require 'path'
+App = require path.join __dirname, '../src/git-object'
 new App().run()
