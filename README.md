@@ -1,13 +1,13 @@
 # INSIDE GIT
 
 ## MODEL
-- index (cache)
-- object
+- Index (cache)
+- Object
 	- blob
 	- commit
 	- tree
 	- tag
-- branch
-
-
-
+- Branch
+- Tag
+- HEAD
+- Stash
