@@ -47,6 +47,7 @@ class GitObjectApp
       for each in results
         console.log "#{style.sha1 each.sha1.toShortSha1()} #{sprintf '%-6s', each.type} \
           #{style.span sprintf '%7s', filesize each.size, spacer:''}  #{style.span each.sample.toSampleString()}"
+      console.log chalk.gray "#{results.length} objects"
 
   get_root: ->
     current = '.'
